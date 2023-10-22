@@ -1,5 +1,5 @@
 # pong
-My first raylib project-a ping pong remake
+My first raylib project-a ping pong remake just to get familiar with a bit of how raylib works
 
 ##Controls
 *player 1*: W -> move up
