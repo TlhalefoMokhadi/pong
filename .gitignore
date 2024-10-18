@@ -1,0 +1,6 @@
+compile_commands.json
+main.code-workspace
+*.exe
+*.dsym
+main
+.vscode
