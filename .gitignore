@@ -1,0 +1,7 @@
+compile_commands.json
+main.code-workspace
+*.exe
+*.dsym
+.cache/clangd/
+.vscode
+build/

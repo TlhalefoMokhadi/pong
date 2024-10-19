@@ -26,7 +26,7 @@
 # Define required raylib variables
 PROJECT_NAME       ?= game
 RAYLIB_VERSION     ?= 4.2.0
-RAYLIB_PATH        ?= ..\..
+RAYLIB_PATH        ?= C:/raylib/raylib
 
 # Define compiler path on Windows
 COMPILER_PATH      ?= C:/raylib/w64devkit/bin
@@ -53,7 +53,7 @@ RAYLIB_H_INSTALL_PATH ?= $(DESTDIR)/include
 RAYLIB_LIBTYPE        ?= STATIC
 
 # Build mode for project: DEBUG or RELEASE
-BUILD_MODE            ?= RELEASE
+BUILD_MODE            ?= DEBUG
 
 # Use external GLFW library instead of rglfw module
 # TODO: Review usage on Linux. Target version of choice. Switch on -lglfw or -lglfw3
@@ -235,7 +235,7 @@ ifeq ($(PLATFORM),PLATFORM_WEB)
     # -s EMTERPRETIFY_ASYNC=1    # support synchronous loops by emterpreter
     # -s FORCE_FILESYSTEM=1      # force filesystem to load/save files data
     # -s ASSERTIONS=1            # enable runtime checks for common memory allocation errors (-O1 and above turn it off)
-    # --profiling                # include information for code profiling
+    # --profiling                # include information for code profiling 
     # --memory-init-file 0       # to avoid an external memory initialization code file (.mem)
     # --preload-file resources   # specify a resources folder for data compilation
     CFLAGS += -Os -s USE_GLFW=3 -s TOTAL_MEMORY=16777216 --preload-file resources
@@ -368,9 +368,9 @@ SRC_DIR = src
 OBJ_DIR = obj
 
 # Define all object files from source files
-SRC = $(call rwildcard, *.c, *.h)
+SRC = $(call rwildcard, *.cpp, *.h)
 #OBJS = $(SRC:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
-OBJS ?= main.c
+OBJS ?= main.cpp
 
 # For Android platform we call a custom Makefile.Android
 ifeq ($(PLATFORM),PLATFORM_ANDROID)
@@ -393,14 +393,19 @@ $(PROJECT_NAME): $(OBJS)
 # Compile source files
 # NOTE: This pattern will compile every module defined on $(OBJS)
 #%.o: %.c
-$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp
 	$(CC) -c $< -o $@ $(CFLAGS) $(INCLUDE_PATHS) -D$(PLATFORM)
-
+run:
+ifeq ($(PLATFORM),PLATFORM_DESKTOP)
+    ifeq ($(PLATFORM_OS),WINDOWS)
+		./game.exe
+    endif
+endif
 # Clean everything
 clean:
 ifeq ($(PLATFORM),PLATFORM_DESKTOP)
     ifeq ($(PLATFORM_OS),WINDOWS)
-		del *.o *.exe /s
+		rm *.o *.exe
     endif
     ifeq ($(PLATFORM_OS),LINUX)
 	find -type f -executable | xargs file -i | grep -E 'x-object|x-archive|x-sharedlib|x-executable' | rev | cut -d ':' -f 2- | rev | xargs rm -fv
